@@ -64,6 +64,13 @@ A head-on, Space Harrier-style rail shooter where you pilot a flying 80s sports 
 - Mall-escalator worms, palm-tree turrets
 - Bosses: giant marble head, a corrupted Windows-95 start menu, the moon itself (final)
 
+## Prototype v0 decisions (implemented)
+- Landscape 960x540 logical canvas, scaled to fit. Portrait/mobile layout still open.
+- Pseudo-3D: each object has a base position on the player plane plus depth z (0 = horizon, 1 = player); screen scale = z^2. Bullets and enemies share this space, so collision is a depth check plus a base-plane distance check.
+- Enemies travel horizon -> player in a whole number of beats (spinner: 8), so they arrive on the beat. Weapon fire is on 16th-note steps.
+- v0 music is a procedural Web Audio synth (no audio assets yet). The beat clock reads `AudioContext.currentTime`, compensated for output latency. The level-up screen suspends the audio context so music and clock stay in sync.
+- Track sections (data in `src/data/tracks.ts`) ramp spawn formations (single / line / arc / wall) from chill to chaos by bar.
+
 ## Open questions
 - Control scheme: touch drag vs. virtual stick, and keyboard/gamepad
 - Final starter weapon set + evolution rules
