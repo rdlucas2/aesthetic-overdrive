@@ -7,10 +7,24 @@
     <style>
       html, body { margin: 0; height: 100%; background: #05010f; overflow: hidden; touch-action: none; }
       #game { width: 100%; height: 100%; }
+      #boot-status { position: fixed; inset: 0; z-index: 10; padding: 16px; color: #00ffe1; font: 14px monospace; white-space: pre-wrap; pointer-events: none; }
+      #boot-status.error { color: #ff6b8a; }
     </style>
   </head>
   <body>
     <div id="game"></div>
+    <div id="boot-status">loading...</div>
+    <script>
+      // Diagnostics: if the game fails to start (e.g. on a phone), show the reason on screen.
+      (function () {
+        var el = document.getElementById('boot-status');
+        var failed = false;
+        function fail(msg) { el.className = 'error'; el.style.display = 'block'; el.textContent = (failed ? el.textContent + '\n' : '') + msg; failed = true; }
+        window.addEventListener('error', function (e) { fail('ERROR: ' + (e.message || e) + (e.filename ? '\n' + e.filename + ':' + e.lineno : '')); });
+        window.addEventListener('unhandledrejection', function (e) { fail('REJECTED: ' + (e.reason && e.reason.message || e.reason)); });
+        window.__bootOk = function () { el.style.display = 'none'; };
+      })();
+    </script>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>
